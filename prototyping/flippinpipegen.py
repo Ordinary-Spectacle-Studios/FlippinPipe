@@ -62,6 +62,7 @@ def johnformat(solv: dict) -> dict:
 
 
 if __name__ == "__main__":
+    """a = amount of puzzles to output, l = length and v = number of unique values per puzzle"""
     a, l, v = [int(x) for x in sys.argv[1:]]
     puzz = generate(a, l, v)
     solv = johnformat(solvedict(puzz))
