@@ -39,6 +39,7 @@ namespace FlippinPipe
             this.Systems.Add(new RenderSystem(this));
             this.Systems.Add(new MenuSystem(this));
             this.Systems.Add(new GenerationSystem(this));
+            this.Systems.Add(new InteractionSystem(this));
 
             var singleton = new Entity();
             singleton.Components.Add(new GlobalState() { GameState = GameStates.Menu });
