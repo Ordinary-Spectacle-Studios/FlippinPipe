@@ -11,6 +11,7 @@ namespace FlippinPipe.Systems
 
         public override void Draw(GameTime gameTime)
         {
+            
         }
 
         public override void Update(GameTime gameTime)

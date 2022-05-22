@@ -4,7 +4,7 @@ namespace FlippinPipe.Systems
 {
     public abstract class GameSystem
     {
-        FlippinPipeEngine Engine;
+        public FlippinPipeEngine Engine;
 
         public GameSystem(FlippinPipeEngine engine)
         {
