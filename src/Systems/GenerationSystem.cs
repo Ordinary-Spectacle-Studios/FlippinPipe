@@ -26,45 +26,42 @@ namespace FlippinPipe.Systems
             if (state.GameState == GameStates.GameStart)
             {
                 var puzzles = DataLoaderService.LoadPuzzles();
-                var puzzle = puzzles.ElementAt(rand.Next(0, puzzles.Count));
+                var puzzleSet = puzzles.ElementAt(rand.Next(0, puzzles.Count));
+                var puzzle = puzzleSet.puzzle.ElementAt(rand.Next(0, puzzleSet.puzzle.Count()));
+
                 state.CurrentPuzzle = puzzle;
-                state.GameState = GameStates.Game;
+                state.PuzzleAnswer =  puzzle.GroupBy(x => x);
 
                 var colorMatches = new Dictionary<string, Color>();
-                foreach (var pieces in puzzle.puzzle)
+                var column = 0;
+                foreach (var letter in puzzle)
                 {
-                    var row = 0;
-                    var column = 0;
-                    foreach (var letter in pieces)
+                    var entity = new Entity();
+                    entity.Components.Add(new Position()
                     {
-                        var entity = new Entity();
-                        entity.Components.Add(new Position()
-                        {
-                            Coordinates = new Vector2(column * 35, row * 35),
-                            Rectangle = new Rectangle(0, 0, 35, 35)
-                        });
-                        entity.Components.Add(new PuzzleKey() { Key = letter.ToString() });
+                        Coordinates = new Vector2(column * 35, 0),
+                        Rectangle = new Rectangle(0, 0, 35, 35)
+                    });
+                    entity.Components.Add(new PuzzleKey() { Key = letter.ToString(), Order = column });
 
-                        var rect = new Texture2D(Engine.GraphicsDevice, 1, 1);
-                        var color = new Color { A = 255, R = ((byte)rand.Next(0, 255)), G = ((byte)rand.Next(0, 255)), B = ((byte)rand.Next(0, 255)) };
-                        if (colorMatches.ContainsKey(letter.ToString()))
-                        {
-                            color = colorMatches[letter.ToString()];
-                        }
-                        else
-                        {
-                            colorMatches.Add(letter.ToString(), color);
-                        }
-                        rect.SetData(new[] { color });
-                        entity.Components.Add(new Render() { Texture = rect });
-                        entity.Components.Add(new Selected());
-
-                        column++;
-                        Engine.Entities.Add(entity);
+                    var rect = new Texture2D(Engine.GraphicsDevice, 1, 1);
+                    var color = new Color { A = 255, R = ((byte)rand.Next(0, 255)), G = ((byte)rand.Next(0, 255)), B = ((byte)rand.Next(0, 255)) };
+                    if (colorMatches.ContainsKey(letter.ToString()))
+                    {
+                        color = colorMatches[letter.ToString()];
                     }
-                    row++;
-                    Console.WriteLine(pieces);
+                    else
+                    {
+                        colorMatches.Add(letter.ToString(), color);
+                    }
+                    rect.SetData(new[] { color });
+                    entity.Components.Add(new Render() { Texture = rect });
+                    entity.Components.Add(new Selected());
+
+                    column++;
+                    Engine.Entities.Add(entity);
                 }
+                state.GameState = GameStates.Game;
             }
         }
     }

@@ -14,17 +14,15 @@ namespace FlippinPipe.Systems
 
         public override void Draw(GameTime gameTime)
         {
-            var heightOffset = 300;
-            var widthOffset = 50;
-            // var sizes = 40;
-
             foreach (var entity in Engine.Entities.Where(x => x.HasTypes(typeof(Position), typeof(Render))))
             {
                 var myRender = entity.GetComponent<Render>();
                 var myPosition = entity.GetComponent<Position>();
+                var mykey = entity.GetComponent<PuzzleKey>();
 
                 //Console.WriteLine("Entity: " + entity.ShortId());
                 Engine.SpriteBatch.Draw(myRender.Texture, myPosition.Destination, Color.White);
+                Engine.SpriteBatch.DrawString(Engine.MainFont, mykey.Key, myPosition.Coordinates, Color.Red);
             }
         }
 
