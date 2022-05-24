@@ -43,6 +43,7 @@ namespace FlippinPipe.Systems
 
                 });
 
+            Engine.SpriteBatch.Draw(Engine.Textures.Frame, new Rectangle(0, 0, Engine.Graphics.PreferredBackBufferWidth, Engine.Graphics.PreferredBackBufferHeight), Color.White);
 
 
             }

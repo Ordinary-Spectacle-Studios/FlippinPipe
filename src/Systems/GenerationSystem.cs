@@ -1,3 +1,4 @@
+using System.Net;
 using System.Collections.Generic;
 using System.Linq;
 using System;
@@ -23,6 +24,15 @@ namespace FlippinPipe.Systems
         {
             var rand = new Random();
             var state = this.Engine.Singleton.GetComponent<GlobalState>();
+            if (state.GameState == GameStates.GameWin)
+            {
+                var removed = Engine.Entities.Where(x => x.HasTypes(typeof(PuzzleKey))).ToList();
+                foreach (var entity in removed)
+                {
+                    Engine.Entities.Remove(entity);
+                }
+                state.GameState = GameStates.GameStart;
+            }
             if (state.GameState == GameStates.GameStart)
             {
                 var puzzles = DataLoaderService.LoadPuzzles();
@@ -30,32 +40,35 @@ namespace FlippinPipe.Systems
                 var puzzle = puzzleSet.puzzle.ElementAt(rand.Next(0, puzzleSet.puzzle.Count()));
 
                 state.CurrentPuzzle = puzzle;
-                state.PuzzleAnswer =  puzzle.GroupBy(x => x);
+                state.PuzzleAnswer = puzzle.GroupBy(x => x);
 
-                var colorMatches = new Dictionary<string, Color>();
+                var matches = new Dictionary<string, Texture2D>();
                 var column = 0;
                 foreach (var letter in puzzle)
                 {
                     var entity = new Entity();
                     entity.Components.Add(new Position()
                     {
-                        Coordinates = new Vector2(column * 35, 0),
+                        Coordinates = new Vector2((column * 35) + 100, 300),
                         Rectangle = new Rectangle(0, 0, 35, 35)
                     });
                     entity.Components.Add(new PuzzleKey() { Key = letter.ToString(), Order = column });
 
-                    var rect = new Texture2D(Engine.GraphicsDevice, 1, 1);
-                    var color = new Color { A = 255, R = ((byte)rand.Next(0, 255)), G = ((byte)rand.Next(0, 255)), B = ((byte)rand.Next(0, 255)) };
-                    if (colorMatches.ContainsKey(letter.ToString()))
+                    var filteredTiles = Engine.Textures.Scene.Tiles
+                        .Where(x => !matches.Select(x => x.Value)
+                        .Contains(x));
+                    var tile = filteredTiles.ElementAt(rand.Next(0, filteredTiles.Count()));
+
+                    if (matches.ContainsKey(letter.ToString()))
                     {
-                        color = colorMatches[letter.ToString()];
+                        tile = matches[letter.ToString()];
                     }
                     else
                     {
-                        colorMatches.Add(letter.ToString(), color);
+                        matches.Add(letter.ToString(), tile);
                     }
-                    rect.SetData(new[] { color });
-                    entity.Components.Add(new Render() { Texture = rect });
+                    //rect.SetData(new[] { color });
+                    entity.Components.Add(new Render() { Texture = tile });
                     entity.Components.Add(new Selected());
 
                     column++;

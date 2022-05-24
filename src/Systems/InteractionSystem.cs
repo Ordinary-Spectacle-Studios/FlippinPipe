@@ -24,13 +24,10 @@ namespace FlippinPipe.Systems
             if (!state.CanMove && state.TimeSinceMove > 250)
             {
                 state.CanMove = true;
-                Console.WriteLine("Can Move");
             }
 
             var allSquares = Engine.Entities.Where(x => x.HasTypes(typeof(Position), typeof(PuzzleKey)));
-
             var mouse = Mouse.GetState();
-
 
             if (mouse.LeftButton == ButtonState.Pressed && state.CanMove)
             {
@@ -55,7 +52,7 @@ namespace FlippinPipe.Systems
                             var newOrder = order + offset++;
                             key.Order = newOrder;
                             var pos = x.GetComponent<Position>();
-                            pos.Coordinates.X = newOrder * 35;
+                            pos.Coordinates.X = (newOrder * 35) + 100;
                         }
                         break;
                     }

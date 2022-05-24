@@ -1,4 +1,5 @@
-﻿using System.Reflection.Metadata;
+﻿using System.ComponentModel;
+using System.Reflection.Metadata;
 using System.Collections.Generic;
 using FlippinPipe.Entities;
 using FlippinPipe.Systems;
@@ -20,12 +21,15 @@ namespace FlippinPipe
 
         public SpriteFont MainFont;
 
+        public TextureData Textures;
+
         public FlippinPipeEngine()
         {
             Graphics = new GraphicsDeviceManager(this);
 
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+            Textures = new TextureData();
         }
 
         protected override void Initialize()
@@ -57,6 +61,19 @@ namespace FlippinPipe
         {
             SpriteBatch = new SpriteBatch(GraphicsDevice);
             MainFont = Content.Load<SpriteFont>("arial");
+            Textures.Frame = Content.Load<Texture2D>("img/base/baseframe");
+
+            Textures.Scene.Background = Content.Load<Texture2D>("img/scenes/graveyard/graveyard_bg");
+            Textures.Scene.Tiles.Add(Content.Load<Texture2D>("img/scenes/graveyard/tiles/coffin"));
+            Textures.Scene.Tiles.Add(Content.Load<Texture2D>("img/scenes/graveyard/tiles/crow"));
+            Textures.Scene.Tiles.Add(Content.Load<Texture2D>("img/scenes/graveyard/tiles/fence"));
+            Textures.Scene.Tiles.Add(Content.Load<Texture2D>("img/scenes/graveyard/tiles/hand"));
+            Textures.Scene.Tiles.Add(Content.Load<Texture2D>("img/scenes/graveyard/tiles/marker"));
+            Textures.Scene.Tiles.Add(Content.Load<Texture2D>("img/scenes/graveyard/tiles/roses"));
+            Textures.Scene.Tiles.Add(Content.Load<Texture2D>("img/scenes/graveyard/tiles/shovel"));
+            Textures.Scene.Tiles.Add(Content.Load<Texture2D>("img/scenes/graveyard/tiles/skull"));
+            Textures.Scene.Tiles.Add(Content.Load<Texture2D>("img/scenes/graveyard/tiles/tombstone"));
+            Textures.Scene.Tiles.Add(Content.Load<Texture2D>("img/scenes/graveyard/tiles/urn"));
 
             // TODO: use this.Content to load your game content here
         }
@@ -75,12 +92,25 @@ namespace FlippinPipe
         {
             SpriteBatch.Begin();
 
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            ///GraphicsDevice.Clear(Color.CornflowerBlue);
 
             this.Systems.ForEach(x => x.Draw(gameTime));
 
             //base.Draw(gameTime);
             SpriteBatch.End();
         }
+    }
+
+    public record TextureData
+    {
+        public Texture2D Frame;
+        public Texture2D CloseBtn;
+        public Texture2D OptionsBtn;
+        public Scene Scene = new();
+    }
+    public record Scene
+    {
+        public Texture2D Background;
+        public List<Texture2D> Tiles = new();
     }
 }

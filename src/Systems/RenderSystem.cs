@@ -14,6 +14,7 @@ namespace FlippinPipe.Systems
 
         public override void Draw(GameTime gameTime)
         {
+            Engine.SpriteBatch.Draw(Engine.Textures.Scene.Background, new Rectangle(0, 0, Engine.Graphics.PreferredBackBufferWidth, Engine.Graphics.PreferredBackBufferHeight), Color.White);
             foreach (var entity in Engine.Entities.Where(x => x.HasTypes(typeof(Position), typeof(Render))))
             {
                 var myRender = entity.GetComponent<Render>();
@@ -22,8 +23,9 @@ namespace FlippinPipe.Systems
 
                 //Console.WriteLine("Entity: " + entity.ShortId());
                 Engine.SpriteBatch.Draw(myRender.Texture, myPosition.Destination, Color.White);
-                Engine.SpriteBatch.DrawString(Engine.MainFont, mykey.Key, myPosition.Coordinates, Color.Red);
+                Engine.SpriteBatch.DrawString(Engine.MainFont, mykey.Key, myPosition.Coordinates, Color.Orange);
             }
+            Engine.SpriteBatch.Draw(Engine.Textures.Frame, new Rectangle(0, 0, Engine.Graphics.PreferredBackBufferWidth, Engine.Graphics.PreferredBackBufferHeight), Color.White);
         }
 
         public override void Update(GameTime gameTime)
